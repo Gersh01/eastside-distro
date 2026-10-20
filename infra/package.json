@@ -1,0 +1,24 @@
+{
+  "name": "eastside-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS infrastructure for East Side Distro (CDK v2, TypeScript)",
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "synth": "cdk synth --strict --quiet",
+    "diff": "cdk diff",
+    "cdk": "cdk"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.273.0",
+    "cdk-nag": "^3.0.2",
+    "constructs": "^10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "aws-cdk": "2.1146.0",
+    "tsx": "^4.23.0",
+    "typescript": "~7.0.2"
+  }
+}

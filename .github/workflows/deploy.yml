@@ -1,0 +1,69 @@
+name: Deploy
+
+# Staging deploys automatically after CI passes on main.
+# Production deploys run by hand (Actions → Deploy → Run workflow → production) and wait for
+# the reviewers configured on the GitHub "production" environment.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to deploy
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+  id-token: write # GitHub OIDC token, exchanged for short-lived AWS credentials
+
+concurrency:
+  group: deploy-${{ inputs.environment || 'staging' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Only deploy CI runs for pushes to this repository: a fork's pull request can have a branch
+    # named "main" too, and must never reach AWS credentials.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    name: Deploy to ${{ inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'staging' }}
+    env:
+      STACK: ${{ (inputs.environment || 'staging') == 'production' && 'EastsideProduction' || 'EastsideStaging' }}
+      SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SHA }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+      - run: npm ci
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+      - name: Diff
+        run: npx cdk diff "$STACK" -c deploymentVersion="$SHA"
+      # Builds the Docker image, pushes it to the CDK asset repository and rolls the ECS service.
+      # New tasks run pending migrations at boot; a failed boot rolls the deployment back.
+      - name: Deploy
+        run: npx cdk deploy "$STACK" --require-approval never --outputs-file cdk-outputs.json -c deploymentVersion="$SHA"
+      - name: Smoke test
+        run: |
+          url=$(node -p "require('./cdk-outputs.json')[process.env.STACK].AppUrl")
+          echo "Checking $url/api/health"
+          curl --fail --silent --show-error --retry 10 --retry-delay 15 --retry-all-errors "$url/api/health"

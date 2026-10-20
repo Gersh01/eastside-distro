@@ -1,0 +1,47 @@
+@import 'tailwindcss';
+
+/* Brand tokens from the 2026 wholesale catalogue: lime "e" mark on near-black ink. */
+@theme {
+  --color-lime: #c8f03c;
+  --color-lime-strong: #b3dc22;
+  --color-ink: #1a1714;
+  --color-ink-soft: #2b2723;
+  --color-paper: #ffffff;
+  --color-sand: #f7f6f3;
+  --color-mist: #ededf0;
+  --color-line: #e4e1da;
+  --color-muted: #6f6a63;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+}
+
+@theme inline {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background-color: var(--color-lime);
+    color: var(--color-ink);
+  }
+}
+
+/* Spaced mono caps, as used for "DETAILS" / "ORDER UNIT" labels in the catalogue. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}

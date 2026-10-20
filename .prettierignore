@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+build
+coverage
+playwright-report
+test-results
+package-lock.json
+infra/node_modules
+infra/cdk.out
+infra/package-lock.json
+drizzle
+public
+docs/reference
+# Managed by Next.js (see the markers inside the file).
+AGENTS.md

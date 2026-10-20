@@ -1,0 +1,18 @@
+# Keep the build context small. CDK fingerprints this context for the image asset,
+# so infra/ (including infra/cdk.out) must stay excluded.
+.git
+.github
+.claude
+.next
+node_modules
+infra
+docs
+e2e
+scripts
+coverage
+playwright-report
+test-results
+.env*
+Dockerfile
+docker-compose.yml
+*.md
