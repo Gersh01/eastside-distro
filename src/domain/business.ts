@@ -2,7 +2,7 @@
 export const BUSINESS = {
   name: 'East Side Distro',
   legalName: 'Eastside Distribution Co.',
-  salesEmail: 'sales@eastsidedistro.com',
+  salesEmail: 'wwwebworkshop@gmail.com',
   address: {
     street: '6148 Hanging Moss Rd',
     city: 'Orlando',
