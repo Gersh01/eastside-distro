@@ -110,6 +110,13 @@ erDiagram
   plus an `application_id` back to the application.
 - `wholesale_account_members`: `account_id`, `user_id`, role (`owner` | `buyer`).
 
+**Phase 2.5: placement orders**
+
+- `wholesale_accounts` gains `account_type` (`standard` | `affiliate`) and the payment term
+  `internal_invoice`.
+- `orders` and `order_items` are created here (see Phase 3) with `channel` (`placement` first),
+  `requested_delivery_date`, `po_reference` and the statuses `submitted` and `approved`.
+
 **Phase 3: commerce**
 
 - `carts`, `cart_items`.

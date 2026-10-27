@@ -37,6 +37,17 @@ Spec: [features/accounts-and-age-verification.md](features/accounts-and-age-veri
 - [ ] Prices: enter retail and wholesale prices (admin screen or `catalog-update` skill), volume breaks
 - [ ] Show prices: retail publicly, wholesale to signed-in approved buyers
 
+## Phase 2.5: Placement orders
+
+Spec: [features/placement-orders.md](features/placement-orders.md)
+
+- [ ] Affiliate wholesale accounts (`account_type`) with `internal_invoice` terms
+- [ ] `orders` and `order_items` tables (Phase 3 extends them), `placement` channel
+- [ ] Order form for affiliate members: wholesale packs, delivery date, PO reference; reorder
+- [ ] Server-side compliance check on submit and approve; prices from the account's price list
+- [ ] Staff queue: edit lines, approve/reject with reason, status flow, audit trail
+- [ ] Emails: order received, approved/rejected, invoice or packing slip
+
 ## Phase 3: Online ordering
 
 Spec: [features/checkout.md](features/checkout.md)
